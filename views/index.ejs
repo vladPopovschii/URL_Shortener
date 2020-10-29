@@ -3,36 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
     <title>URL Shortener</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 </head>
 <body>
-    <div class="container mt-2">
-        <h1>URL Shrinker</h1>
-        <form action="/shortURLs" method="POST" class="my-4 form-inline">
-            <label for="fullURL" class="sr-only">URL</label>
-            <input placeholder="URL" type="url" name="fullURL" id="fullURL" class="form-control col mr-2" required>
-            <button type="submit" class="btn btn-success">Shrink</button>
-        </form>
+    <div class="container">
+        <header>
+            <h1>URL Shortener</h1>
+            <h2>Simplify your url, make it easier to use</h2>
+            <form action="/shortURLs" method="POST">
+                <input placeholder="Enter your URL" type="url" name="fullURL" id="fullURL" required>
+                <button type="submit">Shrink</button>
+            </form>
+        </header>
 
-        <table class="table table-striped table-responsive">
-            <thead>
-                <tr>
-                    <th>Full URL</th>
-                    <th>Short URL</th>
-                    <th>Clicks</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% shortURLs.forEach(shortURL => { %>
-                    <tr>
-                        <td><a href="<%= shortURL.full %>"><%= shortURL.full %></a></td>
-                        <td><a href="<%= shortURL.short %>"><%= shortURL.short %></a></td>
-                        <td><%= shortURL.click %></td>
-                    </tr>
-                <% }) %>
-            </tbody>
-        </table>
+        <h2 class="h2">Converted URLs</h2>
+        <section class="grid-container">
+            <h3>Long URL</h3>
+            <h3>Short URL</h3>
+            <h3 class="click">Clicks</h3>
+            <% shortURLs.forEach(shortURL => { %>
+                    <a href="<%= shortURL.full %>"><%= shortURL.full %></a>
+                    <div class="col"><a href="<%= shortURL.short %>" data-short-link><%= shortURL.short %></a><div class="copy-btn"><img src="copy.svg"></img></div></div>
+                    <div class="click"><%= shortURL.click %></div>
+            <% }) %>
+        </section>
     </div>
+    <script>
+        const links = document.querySelectorAll('[data-short-link]')
+        links.forEach(link => {
+            link.innerText = window.location.host + '/' + link.innerText
+        });
+
+        const buttons = document.querySelectorAll('.copy-btn').forEach(button => {
+            button.onclick = function () {
+                const value = button.parentElement.querySelector('[data-short-link]').innerText
+                const temp = document.createElement('input')
+                temp.value = value
+                document.body.append(temp)
+                temp.select();
+                temp.setSelectionRange(0, 99999);
+                document.execCommand("copy");
+                temp.remove()
+            }
+        })
+    </script>
 </body>
 </html>
