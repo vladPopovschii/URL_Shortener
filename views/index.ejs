@@ -24,7 +24,7 @@
             <h3 class="click">Clicks</h3>
             <% shortURLs.forEach(shortURL => { %>
                     <a href="<%= shortURL.full %>"><%= shortURL.full %></a>
-                    <div class="col"><a href="<%= shortURL.short %>" data-short-link><%= shortURL.short %></a><div class="copy-btn"><img src="copy.svg"></img></div></div>
+                    <div class="col"><a href="<%= shortURL.short %>" data-short-link><%= shortURL.short %></a><div class="copy-btn"><span class="tooltiptext">Copy</span><img src="copy.svg"></img></div></div>
                     <div class="click"><%= shortURL.click %></div>
             <% }) %>
         </section>
@@ -45,6 +45,12 @@
                 temp.setSelectionRange(0, 99999);
                 document.execCommand("copy");
                 temp.remove()
+
+                const tooltip = button.querySelector('.tooltiptext')
+                tooltip.innerText = 'Copied!'
+                setTimeout(function(){
+                    tooltip.innerText = 'Copy'
+                }, 2000)
             }
         })
     </script>
